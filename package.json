@@ -2,7 +2,11 @@
   "name": "xen-playwright",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "cd app && tsc",
+    "dev": "node app/index.js",
+    "watch": "cd app && tsc --watch"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
