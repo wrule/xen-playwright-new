@@ -27,8 +27,15 @@ function main() {
         console.log({ ...result, object: undefined });
         res.json(result);
       };
+      const clean = () => {
+        fs.unlink(scriptFileName, () => { });
+        fs.unlink(configFileName, () => { });
+        fs.unlink(reportJsonFileName, () => { });
+        fs.unlink(reportHtmlFileName, () => { });
+      };
       if (error) {
         json({ success: false });
+        clean();
         return;
       }
       try {
@@ -42,6 +49,7 @@ function main() {
       } catch (error: any) {
         json({ success: false, error });
       }
+      clean();
     });
   });
   app.listen(6422);
