@@ -13,6 +13,8 @@ function main() {
     const uuid = crypto.randomUUID().toString();
     const scriptFileName = `scripts/${uuid}.spec.${lang}`;
     const configFileName = `scripts/${uuid}.config.${lang}`;
+    const reportJsonFileName = `scripts/${uuid}.report.json`;
+    const reportHtmlFileName = `scripts/${uuid}.report.html/index.html`;
     fs.writeFileSync(scriptFileName, script, 'utf8');
     fs.writeFileSync(configFileName, config, 'utf8');
     res.json({ });
