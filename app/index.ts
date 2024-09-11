@@ -40,6 +40,7 @@ function main() {
         fs.unlink(configFileName, () => { });
         fs.unlink(reportJsonFileName, () => { });
         fs.unlink(reportHtmlFileName, () => { });
+        fs.rmdir(reportHtmlFileDir, () => { });
       };
       if (error) {
         json({ success: false });
