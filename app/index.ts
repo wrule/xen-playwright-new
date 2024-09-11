@@ -11,8 +11,8 @@ function main() {
     const script = req.body.script ?? '';
     const config = req.body.config ?? '';
     const uuid = crypto.randomUUID().toString();
-    const scriptFileName = `tests/${uuid}.spec.${lang}`;
-    const configFileName = `configs/${uuid}.config.${lang}`;
+    const scriptFileName = `scripts/${uuid}.spec.${lang}`;
+    const configFileName = `scripts/${uuid}.config.${lang}`;
     fs.writeFileSync(scriptFileName, script, 'utf8');
     fs.writeFileSync(configFileName, config, 'utf8');
     res.json({ });
