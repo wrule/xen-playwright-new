@@ -39,8 +39,9 @@ function main() {
         fs.unlink(scriptFileName, () => { });
         fs.unlink(configFileName, () => { });
         fs.unlink(reportJsonFileName, () => { });
-        fs.unlink(reportHtmlFileName, () => { });
-        fs.rmdir(reportHtmlFileDir, () => { });
+        fs.unlink(reportHtmlFileName, () => {
+          fs.rmdir(reportHtmlFileDir, () => { });
+        });
       };
       if (error) {
         json({ success: false });
