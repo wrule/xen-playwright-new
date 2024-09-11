@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { exec } from 'child_process';
 import crypto from 'crypto';
+import dayjs from 'dayjs';
 import express from 'express';
 import bodyParser from 'body-parser';
 
@@ -20,22 +21,26 @@ function main() {
     // fs.writeFileSync(scriptFileName, script, 'utf8');
     // fs.writeFileSync(configFileName, config, 'utf8');
     exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, (error, stdout, stderr) => {
+      const info: any = { time: dayjs().format('YYYY-MM-DD HH:mm:ss'), uuid, error, stdout, stderr };
+      const json = (data: any = { }) => {
+        const result = { ...info, ...data };
+        console.log({ ...result, object: undefined });
+        res.json(result);
+      };
       if (error) {
-        res.json({ uuid, success: false, message: error.message ?? 'script running error', stdout, stderr });
+        json({ success: false });
         return;
       }
       try {
-        res.json({
-          uuid,
+        json({
           success: true,
           object: {
             html: fs.readFileSync(reportHtmlFileName, 'utf8'),
             json: JSON.parse(fs.readFileSync(reportJsonFileName, 'utf8')),
           },
-          stdout, stderr,
         });
       } catch (error: any) {
-        res.json({ uuid, success: false, message: error.message ?? 'report read error', stdout, stderr });
+        json({ success: false });
       }
     });
   });
