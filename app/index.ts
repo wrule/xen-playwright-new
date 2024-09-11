@@ -13,14 +13,13 @@ function main() {
     const script = req.body.script ?? '';
     const config = req.body.config ?? '';
     const timeout = req.body.timeout;
-    // const uuid = crypto.randomUUID().toString();
-    const uuid = '48e54080-5b47-46f9-9b1a-3bb4823411d4';
+    const uuid = crypto.randomUUID().toString();
     const scriptFileName = `scripts/${uuid}.spec.${lang}`;
     const configFileName = `scripts/${uuid}.config.${lang}`;
     const reportJsonFileName = `scripts/${uuid}.report.json`;
     const reportHtmlFileName = `scripts/${uuid}.report.html/index.html`;
-    // fs.writeFileSync(scriptFileName, script, 'utf8');
-    // fs.writeFileSync(configFileName, config, 'utf8');
+    fs.writeFileSync(scriptFileName, script, 'utf8');
+    fs.writeFileSync(configFileName, config, 'utf8');
     exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, (error, stdout, stderr) => {
       const info: any = { time: dayjs().format('YYYY-MM-DD HH:mm:ss'), uuid, error, stdout, stderr };
       const json = (data: any = { }) => {
