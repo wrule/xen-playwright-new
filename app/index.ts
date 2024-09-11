@@ -12,13 +12,20 @@ function main() {
   app.post('/api/run', (req, res) => {
     const lang = req.body.lang ?? 'ts';
     const script = req.body.script ?? '';
-    const config = req.body.config ?? '';
+    let config = req.body.config ?? '';
     const timeout = req.body.timeout;
     const uuid = crypto.randomUUID().toString();
     const scriptFileName = `scripts/${uuid}.spec.${lang}`;
     const configFileName = `scripts/${uuid}.config.${lang}`;
     const reportJsonFileName = `scripts/${uuid}.report.json`;
-    const reportHtmlFileName = `scripts/${uuid}.report.html/index.html`;
+    const reportHtmlFileDir = `scripts/${uuid}.report.html`;
+    const reportHtmlFileName = `${reportHtmlFileDir}/index.html`;
+
+    config = config.replaceAll("'${perfma_report}'", JSON.stringify([
+      ['html', { open: 'never', outputFolder: reportHtmlFileDir.replace('scripts/', '') }],
+      ['json', { outputFile: reportJsonFileName.replace('scripts/', '') }],
+    ]));
+
     fs.writeFileSync(scriptFileName, script, 'utf8');
     fs.writeFileSync(configFileName, config, 'utf8');
     exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, (error, stdout, stderr) => {
