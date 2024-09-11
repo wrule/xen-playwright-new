@@ -36,12 +36,12 @@ function main() {
         res.json(result);
       };
       const clean = () => {
-        fs.unlink(scriptFileName, () => { });
-        fs.unlink(configFileName, () => { });
-        fs.unlink(reportJsonFileName, () => { });
-        fs.unlink(reportHtmlFileName, () => {
-          fs.rmdir(reportHtmlFileDir, () => { });
-        });
+        // fs.unlink(scriptFileName, () => { });
+        // fs.unlink(configFileName, () => { });
+        // fs.unlink(reportJsonFileName, () => { });
+        // fs.unlink(reportHtmlFileName, () => {
+        //   fs.rmdir(reportHtmlFileDir, () => { });
+        // });
       };
       try {
         json({
@@ -57,15 +57,15 @@ function main() {
       clean();
     });
   });
-  app.listen(6422);
+  app.listen(6439);
 
-  setTimeout(() => {
-    axios.post('http://localhost:6422/api/run', {
-      lang: 'ts',
-      script: fs.readFileSync('app/example.spec.ts', 'utf8'),
-      config: fs.readFileSync('app/playwright.config.ts', 'utf8'),
-    }).then(console.log);
-  }, 1000);
+  // setTimeout(() => {
+  //   axios.post('http://localhost:6422/api/run', {
+  //     lang: 'ts',
+  //     script: fs.readFileSync('app/example.spec.ts', 'utf8'),
+  //     config: fs.readFileSync('app/playwright.config.ts', 'utf8'),
+  //   }).then(console.log);
+  // }, 1000);
 }
 
 main();
