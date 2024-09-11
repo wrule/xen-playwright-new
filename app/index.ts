@@ -43,11 +43,6 @@ function main() {
           fs.rmdir(reportHtmlFileDir, () => { });
         });
       };
-      if (error) {
-        json({ success: false });
-        clean();
-        return;
-      }
       try {
         json({
           success: true,
