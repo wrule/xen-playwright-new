@@ -12,6 +12,7 @@ function main() {
     const lang = req.body.lang ?? 'ts';
     const script = req.body.script ?? '';
     const config = req.body.config ?? '';
+    const timeout = req.body.timeout;
     // const uuid = crypto.randomUUID().toString();
     const uuid = '48e54080-5b47-46f9-9b1a-3bb4823411d4';
     const scriptFileName = `scripts/${uuid}.spec.${lang}`;
@@ -40,7 +41,7 @@ function main() {
           },
         });
       } catch (error: any) {
-        json({ success: false });
+        json({ success: false, error });
       }
     });
   });
