@@ -27,7 +27,7 @@ function main() {
       fs.writeFile(scriptFileName, script, 'utf8'),
       fs.writeFile(configFileName, config, 'utf8'),
     ]);
-    exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
+    const child = exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
       const info: any = { time: dayjs().format('YYYY-MM-DD HH:mm:ss'), uuid, error, stdout, stderr };
       const json = (data: any = { }) => {
         const result = { ...info, ...data };
@@ -51,6 +51,9 @@ function main() {
       }
       clean();
     });
+    if (timeout) setTimeout(() => {
+      child.kill();
+    }, timeout);
   });
   app.listen(PORT, () => {
     console.log(`xen-playwright works on ${PORT} port...`);
