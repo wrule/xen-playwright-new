@@ -38,8 +38,9 @@ function main() {
       fs.unlink(reportHtmlFileName).then(() => fs.rmdir(reportHtmlFileDir));
     });
     if (timeout) setTimeout(() => {
+      const message = `timeout ${timeout}ms`;
+      res.json({ ...info, endTime: Date.now(), error: new Error(message), message, success: false });
       child.kill();
-      res.json({ ...info,  });
     }, timeout);
   });
   app.listen(PORT, () => console.log(`xen-playwright works on ${PORT} port...`));
