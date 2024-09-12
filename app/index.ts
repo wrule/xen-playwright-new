@@ -18,12 +18,10 @@ function main() {
     const uuid = crypto.randomUUID().toString();
     const scriptFileName = `scripts/${uuid}.spec.${lang}`;
     const configFileName = `scripts/${uuid}.config.${lang}`;
-    const reportJsonFileName = `scripts/${uuid}.report.json`;
     const reportHtmlFileDir = `scripts/${uuid}.report.html`;
     const reportHtmlFileName = `${reportHtmlFileDir}/index.html`;
     config = config.replaceAll("'${perfma_report}'", JSON.stringify([
       ['html', { open: 'never', outputFolder: reportHtmlFileDir.replace('scripts/', '') }],
-      ['json', { outputFile: reportJsonFileName.replace('scripts/', '') }],
     ]));
     await Promise.all([
       fs.writeFile(scriptFileName, script, 'utf8'),
@@ -39,7 +37,6 @@ function main() {
       const clean = () => {
         fs.unlink(scriptFileName);
         fs.unlink(configFileName);
-        fs.unlink(reportJsonFileName);
         fs.unlink(reportHtmlFileName).then(() => {
           fs.rmdir(reportHtmlFileDir);
         });
