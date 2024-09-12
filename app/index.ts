@@ -7,6 +7,9 @@ import dayjs from 'dayjs';
 import express from 'express';
 import bodyParser from 'body-parser';
 
+process.on('uncaughtException', () => { });
+process.on('unhandledRejection', () => { });
+
 const PORT = 6439;
 
 function main() {
@@ -63,7 +66,7 @@ function main() {
       lang: 'ts',
       script: fsSync.readFileSync('app/example.spec.ts', 'utf8'),
       config: fsSync.readFileSync('app/playwright.config.ts', 'utf8'),
-      timeout: 500,
+      timeout: 5000,
     });
   }, 1000);
 }
