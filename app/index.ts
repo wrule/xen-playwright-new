@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import fs from 'fs/promises';
 import { exec } from 'child_process';
+import dayjs from 'dayjs';
 import express from 'express';
 import bodyParser from 'body-parser';
 
@@ -27,11 +28,12 @@ function main() {
       console.log(JSON.stringify({ ...data, object: undefined }, null, 2));
       res.json(data);
     };
-    let info: any = { uuid, startTime: Date.now() };
+    const now = () => dayjs().format('YYYY-MM-DD HH:mm:ss');
+    let info: any = { uuid, startTime: now() };
     let timer: any = null;
     const child = exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
       clearTimeout(timer);
-      info = { ...info, endTime: Date.now(), error, stdout, stderr, success: !error };
+      info = { ...info, endTime: now(), error, stdout, stderr, success: !error };
       try {
         info = { ...info, object: await fs.readFile(reportHtmlFileName, 'utf8') };
       } catch (error) {
@@ -45,7 +47,7 @@ function main() {
     });
     if (timeout) timer = setTimeout(() => {
       const message = `timeout ${timeout}ms`;
-      json({ ...info, endTime: Date.now(), error: new Error(message), message, success: false });
+      json({ ...info, endTime: now(), error: new Error(message), message, success: false });
       child.kill();
     }, timeout);
   });
