@@ -1,6 +1,8 @@
+import fsSync from 'fs';
 import crypto from 'crypto';
 import fs from 'fs/promises';
 import { exec } from 'child_process';
+import axios from 'axios';
 import dayjs from 'dayjs';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -52,6 +54,14 @@ function main() {
     }, timeout);
   });
   app.listen(PORT, () => console.log(`xen-playwright works on ${PORT} port...`));
+
+  setTimeout(() => {
+    axios.post(`http://localhost:${PORT}/api/run`, {
+      lang: 'ts',
+      script: fsSync.readFileSync('app/example.spec.ts', 'utf8'),
+      config: fsSync.readFileSync('app/playwright.config.ts', 'utf8'),
+    });
+  }, 1000);
 }
 
 main();
