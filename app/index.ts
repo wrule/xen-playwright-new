@@ -2,9 +2,10 @@ import fs from 'fs';
 import { exec } from 'child_process';
 import crypto from 'crypto';
 import dayjs from 'dayjs';
-import axios from 'axios';
 import express from 'express';
 import bodyParser from 'body-parser';
+
+const PORT = 6439;
 
 function main() {
   const app = express();
@@ -57,15 +58,9 @@ function main() {
       clean();
     });
   });
-  app.listen(6439);
-
-  // setTimeout(() => {
-  //   axios.post('http://localhost:6422/api/run', {
-  //     lang: 'ts',
-  //     script: fs.readFileSync('app/example.spec.ts', 'utf8'),
-  //     config: fs.readFileSync('app/playwright.config.ts', 'utf8'),
-  //   }).then(console.log);
-  // }, 1000);
+  app.listen(PORT, () => {
+    console.log(`xen-playwright works on ${PORT} port...`);
+  });
 }
 
 main();
