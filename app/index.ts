@@ -36,12 +36,12 @@ function main() {
         res.json(result);
       };
       const clean = () => {
-        // fs.unlink(scriptFileName, () => { });
-        // fs.unlink(configFileName, () => { });
-        // fs.unlink(reportJsonFileName, () => { });
-        // fs.unlink(reportHtmlFileName, () => {
-        //   fs.rmdir(reportHtmlFileDir, () => { });
-        // });
+        fs.unlink(scriptFileName, () => { });
+        fs.unlink(configFileName, () => { });
+        fs.unlink(reportJsonFileName, () => { });
+        fs.unlink(reportHtmlFileName, () => {
+          fs.rmdir(reportHtmlFileDir, () => { });
+        });
       };
       try {
         json({
