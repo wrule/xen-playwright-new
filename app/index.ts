@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import { exec } from 'child_process';
 import crypto from 'crypto';
 import dayjs from 'dayjs';
@@ -10,7 +10,7 @@ const PORT = 6439;
 function main() {
   const app = express();
   app.use(bodyParser.json());
-  app.post('/api/run', (req, res) => {
+  app.post('/api/run', async (req, res) => {
     const lang = req.body.lang ?? 'ts';
     const script = req.body.script ?? '';
     let config = req.body.config ?? '';
@@ -21,14 +21,14 @@ function main() {
     const reportJsonFileName = `scripts/${uuid}.report.json`;
     const reportHtmlFileDir = `scripts/${uuid}.report.html`;
     const reportHtmlFileName = `${reportHtmlFileDir}/index.html`;
-
     config = config.replaceAll("'${perfma_report}'", JSON.stringify([
       ['html', { open: 'never', outputFolder: reportHtmlFileDir.replace('scripts/', '') }],
       ['json', { outputFile: reportJsonFileName.replace('scripts/', '') }],
     ]));
-
-    fs.writeFileSync(scriptFileName, script, 'utf8');
-    fs.writeFileSync(configFileName, config, 'utf8');
+    await Promise.all([
+      fs.writeFile(scriptFileName, script, 'utf8'),
+      fs.writeFile(configFileName, config, 'utf8'),
+    ]);
     exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, (error, stdout, stderr) => {
       const info: any = { time: dayjs().format('YYYY-MM-DD HH:mm:ss'), uuid, error, stdout, stderr };
       const json = (data: any = { }) => {
@@ -37,11 +37,11 @@ function main() {
         res.json(result);
       };
       const clean = () => {
-        fs.unlink(scriptFileName, () => { });
-        fs.unlink(configFileName, () => { });
-        fs.unlink(reportJsonFileName, () => { });
-        fs.unlink(reportHtmlFileName, () => {
-          fs.rmdir(reportHtmlFileDir, () => { });
+        fs.unlink(scriptFileName);
+        fs.unlink(configFileName);
+        fs.unlink(reportJsonFileName);
+        fs.unlink(reportHtmlFileName).then(() => {
+          fs.rmdir(reportHtmlFileDir);
         });
       };
       try {
