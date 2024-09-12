@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import fs from 'fs/promises';
 import { exec } from 'child_process';
-import dayjs from 'dayjs';
 import express from 'express';
 import bodyParser from 'body-parser';
 
@@ -27,29 +26,19 @@ function main() {
       fs.writeFile(scriptFileName, script, 'utf8'),
       fs.writeFile(configFileName, config, 'utf8'),
     ]);
+    let info: any = { uuid, startTime: Date.now() };
     const child = exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
-      const info: any = { time: dayjs().format('YYYY-MM-DD HH:mm:ss'), uuid, error, stdout, stderr };
-      const json = (data: any = { }) => {
-        const result = { ...info, ...data };
-        console.log({ ...result, object: undefined });
-        res.json(result);
-      };
-      const clean = () => {
-        fs.unlink(scriptFileName);
-        fs.unlink(configFileName);
-        fs.unlink(reportHtmlFileName).then(() => {
-          fs.rmdir(reportHtmlFileDir);
-        });
-      };
+      info = { ...info, endTime: Date.now(), error, stdout, stderr, success: !error };
       try {
-        json({
-          success: true,
-          object: await fs.readFile(reportHtmlFileName, 'utf8'),
-        });
-      } catch (error: any) {
-        json({ success: false, error });
+        info = { ...info, object: await fs.readFile(reportHtmlFileName, 'utf8') };
+      } catch (error) {
+        info = { ...info, error, success: false };
       }
-      clean();
+      info = { ...info, message: info.error?.message };
+      res.json(info);
+      fs.unlink(scriptFileName);
+      fs.unlink(configFileName);
+      fs.unlink(reportHtmlFileName).then(() => fs.rmdir(reportHtmlFileDir));
     });
     if (timeout) setTimeout(() => {
       child.kill();
