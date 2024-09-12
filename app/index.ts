@@ -23,6 +23,10 @@ function main() {
       ['html', { open: 'never', outputFolder: reportHtmlFileDir.replace('scripts/', '') }],
     ]));
     await Promise.all([fs.writeFile(scriptFileName, script, 'utf8'), fs.writeFile(configFileName, config, 'utf8')]);
+    const json = (data: any) => {
+      console.log(JSON.stringify({ ...data, object: undefined }, null, 2));
+      res.json(data);
+    };
     let info: any = { uuid, startTime: Date.now() };
     let timer: any = null;
     const child = exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
@@ -34,14 +38,14 @@ function main() {
         info = { ...info, error, success: false };
       }
       info = { ...info, message: info.error?.message };
-      res.json(info);
+      json(info);
       fs.unlink(scriptFileName);
       fs.unlink(configFileName);
       fs.unlink(reportHtmlFileName).then(() => fs.rmdir(reportHtmlFileDir));
     });
     if (timeout) timer = setTimeout(() => {
       const message = `timeout ${timeout}ms`;
-      res.json({ ...info, endTime: Date.now(), error: new Error(message), message, success: false });
+      json({ ...info, endTime: Date.now(), error: new Error(message), message, success: false });
       child.kill();
     }, timeout);
   });
