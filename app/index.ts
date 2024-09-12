@@ -1,6 +1,6 @@
+import crypto from 'crypto';
 import fs from 'fs/promises';
 import { exec } from 'child_process';
-import crypto from 'crypto';
 import dayjs from 'dayjs';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -12,7 +12,7 @@ function main() {
   app.use(bodyParser.json());
   app.post('/api/run', async (req, res) => {
     const lang = req.body.lang ?? 'ts';
-    const script = req.body.script ?? '';
+    const script = '// @ts-ignore\n' + req.body.script ?? '';
     let config = req.body.config ?? '';
     const timeout = req.body.timeout;
     const uuid = crypto.randomUUID().toString();
