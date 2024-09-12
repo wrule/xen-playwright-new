@@ -24,7 +24,9 @@ function main() {
     ]));
     await Promise.all([fs.writeFile(scriptFileName, script, 'utf8'), fs.writeFile(configFileName, config, 'utf8')]);
     let info: any = { uuid, startTime: Date.now() };
+    let timer: any = null;
     const child = exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
+      clearTimeout(timer);
       info = { ...info, endTime: Date.now(), error, stdout, stderr, success: !error };
       try {
         info = { ...info, object: await fs.readFile(reportHtmlFileName, 'utf8') };
@@ -37,7 +39,7 @@ function main() {
       fs.unlink(configFileName);
       fs.unlink(reportHtmlFileName).then(() => fs.rmdir(reportHtmlFileDir));
     });
-    if (timeout) setTimeout(() => {
+    if (timeout) timer = setTimeout(() => {
       const message = `timeout ${timeout}ms`;
       res.json({ ...info, endTime: Date.now(), error: new Error(message), message, success: false });
       child.kill();
