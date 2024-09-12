@@ -22,10 +22,7 @@ function main() {
     config = config.replaceAll("'${perfma_report}'", JSON.stringify([
       ['html', { open: 'never', outputFolder: reportHtmlFileDir.replace('scripts/', '') }],
     ]));
-    await Promise.all([
-      fs.writeFile(scriptFileName, script, 'utf8'),
-      fs.writeFile(configFileName, config, 'utf8'),
-    ]);
+    await Promise.all([fs.writeFile(scriptFileName, script, 'utf8'), fs.writeFile(configFileName, config, 'utf8')]);
     let info: any = { uuid, startTime: Date.now() };
     const child = exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
       info = { ...info, endTime: Date.now(), error, stdout, stderr, success: !error };
@@ -42,11 +39,10 @@ function main() {
     });
     if (timeout) setTimeout(() => {
       child.kill();
+      res.json({ ...info,  });
     }, timeout);
   });
-  app.listen(PORT, () => {
-    console.log(`xen-playwright works on ${PORT} port...`);
-  });
+  app.listen(PORT, () => console.log(`xen-playwright works on ${PORT} port...`));
 }
 
 main();
