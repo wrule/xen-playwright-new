@@ -26,9 +26,12 @@ function main() {
       ['html', { open: 'never', outputFolder: reportHtmlFileDir.replace('scripts/', '') }],
     ]));
     await Promise.all([fs.writeFile(scriptFileName, script, 'utf8'), fs.writeFile(configFileName, config, 'utf8')]);
+    let finished = false;
     const json = (data: any) => {
+      if (finished) return;
       console.log(JSON.stringify({ ...data, object: undefined }, null, 2));
       res.json(data);
+      finished = true;
     };
     const now = () => dayjs().format('YYYY-MM-DD HH:mm:ss');
     let info: any = { uuid, startTime: now() };
@@ -60,6 +63,7 @@ function main() {
       lang: 'ts',
       script: fsSync.readFileSync('app/example.spec.ts', 'utf8'),
       config: fsSync.readFileSync('app/playwright.config.ts', 'utf8'),
+      timeout: 500,
     });
   }, 1000);
 }
