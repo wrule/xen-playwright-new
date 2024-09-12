@@ -29,7 +29,7 @@ function main() {
       fs.writeFile(scriptFileName, script, 'utf8'),
       fs.writeFile(configFileName, config, 'utf8'),
     ]);
-    exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, (error, stdout, stderr) => {
+    exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
       const info: any = { time: dayjs().format('YYYY-MM-DD HH:mm:ss'), uuid, error, stdout, stderr };
       const json = (data: any = { }) => {
         const result = { ...info, ...data };
@@ -47,10 +47,7 @@ function main() {
       try {
         json({
           success: true,
-          object: {
-            html: fs.readFileSync(reportHtmlFileName, 'utf8'),
-            json: JSON.parse(fs.readFileSync(reportJsonFileName, 'utf8')),
-          },
+          object: await fs.readFile(reportHtmlFileName, 'utf8'),
         });
       } catch (error: any) {
         json({ success: false, error });
