@@ -6,6 +6,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import express from 'express';
 import bodyParser from 'body-parser';
+import compression from 'compression';
 
 process.on('uncaughtException', () => { });
 process.on('unhandledRejection', () => { });
@@ -14,6 +15,7 @@ const PORT = 6439;
 
 function main() {
   const app = express();
+  app.use(compression());
   app.use(bodyParser.json());
   app.post('/api/run', async (req, res) => {
     const lang = req.body.lang ?? 'ts';
