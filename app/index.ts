@@ -19,7 +19,7 @@ function main() {
   app.use(bodyParser.json());
   app.post('/api/run', async (req, res) => {
     const lang = req.body.lang ?? 'ts';
-    const script = '// @ts-ignore\n' + req.body.script ?? '';
+    const script = '// @ts-ignore\n' + (req.body.script ?? '');
     let config = req.body.config ?? '';
     const timeout = req.body.timeout;
     const uuid = crypto.randomUUID().toString();
