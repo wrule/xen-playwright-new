@@ -5,7 +5,7 @@ node_modules/
 /playwright/.cache/
 /json_reports/
 /configs/
-/scripts/
+# /scripts/
 /browsers/
 
 /app/**/*.js
