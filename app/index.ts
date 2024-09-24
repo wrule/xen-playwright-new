@@ -11,7 +11,7 @@ import compression from 'compression';
 process.on('uncaughtException', () => { });
 process.on('unhandledRejection', () => { });
 
-const PORT = 6419;
+const PORT = 6429;
 
 function main() {
   const app = express();
