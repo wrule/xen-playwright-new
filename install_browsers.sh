@@ -1,2 +1,2 @@
 #!/bin/bash
-PLAYWRIGHT_BROWSERS_PATH=./browsers npx playwright install chrome
+PLAYWRIGHT_BROWSERS_PATH=`pwd`/browsers npx playwright install
