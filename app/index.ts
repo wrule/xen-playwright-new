@@ -63,14 +63,14 @@ function main() {
   });
   app.listen(PORT, () => console.log(`xen-playwright works on ${PORT} port...`));
 
-  // setTimeout(() => {
-  //   axios.post(`http://189.1.216.125:${PORT}/api/run`, {
-  //     lang: 'ts',
-  //     script: fsSync.readFileSync('app/example.spec.ts', 'utf8'),
-  //     config: fsSync.readFileSync('app/playwright.config.ts', 'utf8'),
-  //     timeout: 5000,
-  //   });
-  // }, 1000);
+  setTimeout(() => {
+    axios.post(`http://127.0.0.1:${PORT}/api/run`, {
+      lang: 'ts',
+      script: fsSync.readFileSync('app/example.spec.ts', 'utf8'),
+      config: fsSync.readFileSync('app/playwright.config.ts', 'utf8'),
+      timeout: 5000,
+    });
+  }, 1000);
 }
 
 main();
