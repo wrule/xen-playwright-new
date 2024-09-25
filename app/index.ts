@@ -64,7 +64,7 @@ function main() {
   app.listen(PORT, () => console.log(`xen-playwright works on ${PORT} port...`));
 
   // setTimeout(() => {
-  //   axios.post(`http://localhost:${PORT}/api/run`, {
+  //   axios.post(`http://189.1.216.125:${PORT}/api/run`, {
   //     lang: 'ts',
   //     script: fsSync.readFileSync('app/example.spec.ts', 'utf8'),
   //     config: fsSync.readFileSync('app/playwright.config.ts', 'utf8'),
