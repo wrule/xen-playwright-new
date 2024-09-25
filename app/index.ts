@@ -19,7 +19,8 @@ function main() {
   app.use(bodyParser.json());
   app.post('/api/run', async (req, res) => {
     const lang = req.body.lang ?? 'ts';
-    const script = '// @ts-ignore\n' + (req.body.script ?? '');
+    const preScripts: string[] = req.body.preScripts ?? [];
+    const script = '// @ts-ignore\n' + preScripts.join('\n') + '\n' + (req.body.script ?? '');
     let config = req.body.config ?? '';
     const timeout = req.body.timeout;
     const uuid = crypto.randomUUID().toString();
@@ -68,6 +69,10 @@ function main() {
       lang: 'ts',
       script: fsSync.readFileSync('app/example.spec.ts', 'utf8'),
       config: fsSync.readFileSync('app/playwright.config.ts', 'utf8'),
+      preScripts: [`
+        const moment = require('moment');
+        console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+      `],
       timeout: 5000,
     });
   }, 1000);
