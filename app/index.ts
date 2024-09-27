@@ -69,7 +69,7 @@ test.afterAll(() => {
       clearTimeout(timer);
       info = { ...info, endTime: now(), error, stdout, stderr, success: !error };
       try {
-        info = { ...info, object: await fs.readFile(reportHtmlFileName, 'utf8') };
+        info = { ...info, object: await fs.readFile(reportHtmlFileName, 'utf8'), states: require(statesFileName) };
       } catch (error) {
         info = { ...info, error, success: false };
       }
