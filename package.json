@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "build": "cd app && tsc",
-    "dev": "node app/index.js",
-    "pm2": "pm2 start app/index.js",
+    "dev": "PLAYWRIGHT_BROWSERS_PATH=`pwd`/browsers node app/index.js",
+    "pm2": "PLAYWRIGHT_BROWSERS_PATH=`pwd`/browsers pm2 start app/index.js",
     "watch": "cd app && tsc --watch"
   },
   "keywords": [],
