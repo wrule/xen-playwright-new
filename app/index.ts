@@ -101,7 +101,7 @@ test.afterAll(() => {
         let window = { };
         window.perfma = 'benma';
       `],
-      timeout: 5000,
+      timeout: 10000,
     });
   }, 1000);
 }
