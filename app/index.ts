@@ -20,7 +20,12 @@ function main() {
   app.post('/api/run', async (req, res) => {
     const lang = req.body.lang ?? 'ts';
     const preScripts: string[] = req.body.preScripts ?? [];
-    const script = '// @ts-ignore\n' + preScripts.join('\n') + '\n' + (req.body.script ?? '');
+
+    const script =
+      '// @ts-ignore\n' +
+      preScripts.join('\n') + '\n' +
+      (req.body.script ?? '');
+
     let config = req.body.config ?? '';
     const timeout = req.body.timeout;
     const uuid = crypto.randomUUID().toString();
