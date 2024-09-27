@@ -4,9 +4,10 @@
   "main": "index.js",
   "scripts": {
     "build": "cd app && tsc",
+    "watch": "cd app && tsc --watch",
     "dev": "PLAYWRIGHT_BROWSERS_PATH=`pwd`/browsers node app/index.js",
     "pm2": "PLAYWRIGHT_BROWSERS_PATH=`pwd`/browsers pm2 start app/index.js",
-    "watch": "cd app && tsc --watch"
+    "install_browsers": "npx playwright install-deps && PLAYWRIGHT_BROWSERS_PATH=`pwd`/browsers npx playwright install"
   },
   "keywords": [],
   "author": "",
