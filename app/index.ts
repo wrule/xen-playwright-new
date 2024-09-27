@@ -37,6 +37,7 @@ const sys = new Sys(${JSON.stringify(variables)}, ${JSON.stringify(envVariables)
     const scriptFileName = `scripts/${uuid}.spec.${lang}`;
     const configFileName = `scripts/${uuid}.config.${lang}`;
     const reportHtmlFileDir = `scripts/${uuid}.report.html`;
+    const statesFileName = `scripts/${uuid}.states.json`;
     const reportHtmlFileName = `${reportHtmlFileDir}/index.html`;
     config = config.replaceAll("'${perfma_report}'", JSON.stringify([
       ['html', { open: 'never', outputFolder: reportHtmlFileDir.replace('scripts/', '') }],
@@ -64,6 +65,7 @@ const sys = new Sys(${JSON.stringify(variables)}, ${JSON.stringify(envVariables)
       json(info);
       fs.unlink(scriptFileName);
       fs.unlink(configFileName);
+      fs.unlink(statesFileName);
       fs.unlink(reportHtmlFileName).then(() => fs.rmdir(reportHtmlFileDir));
     });
     if (timeout) timer = setTimeout(() => {
