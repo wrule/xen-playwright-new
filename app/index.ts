@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import express from 'express';
 import bodyParser from 'body-parser';
 import compression from 'compression';
+import path from 'path';
 
 process.on('uncaughtException', () => { });
 process.on('unhandledRejection', () => { });
@@ -69,7 +70,7 @@ test.afterAll(() => {
       clearTimeout(timer);
       info = { ...info, endTime: now(), error, stdout, stderr, success: !error };
       try {
-        info = { ...info, object: await fs.readFile(reportHtmlFileName, 'utf8'), states: require(statesFileName) };
+        info = { ...info, object: await fs.readFile(reportHtmlFileName, 'utf8'), states: require(path.join('..', statesFileName)) };
       } catch (error) {
         info = { ...info, error, success: false };
       }
