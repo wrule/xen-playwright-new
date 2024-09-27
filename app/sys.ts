@@ -1,4 +1,5 @@
 
+export default
 class Sys {
   public constructor(
     private variables: any = { },

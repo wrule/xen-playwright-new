@@ -23,6 +23,10 @@ function main() {
 
     const script =
       '// @ts-ignore\n' +
+      `
+import Sys from '../app/sys';
+const sys = new Sys();
+      `.trim() + '\n' +
       preScripts.join('\n') + '\n' +
       (req.body.script ?? '');
 
