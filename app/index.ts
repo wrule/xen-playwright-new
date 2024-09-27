@@ -80,7 +80,7 @@ test.afterAll(() => {
       fs.unlink(scriptFileName);
       fs.unlink(configFileName);
       fs.unlink(statesFileName);
-      fs.unlink(reportHtmlFileName).then(() => fs.rmdir(reportHtmlFileDir));
+      // fs.unlink(reportHtmlFileName).then(() => fs.rmdir(reportHtmlFileDir));
     });
     if (timeout) timer = setTimeout(() => {
       const message = `timeout ${timeout}ms`;
