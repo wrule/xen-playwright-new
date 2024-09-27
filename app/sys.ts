@@ -30,6 +30,6 @@ class Sys {
   }
 
   public exec() {
-
+    throw new Error('外部脚本模块后续有整体改版，固playwright脚本内暂不支持使用外部脚本。');
   }
 }
