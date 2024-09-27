@@ -20,12 +20,13 @@ function main() {
   app.post('/api/run', async (req, res) => {
     const lang = req.body.lang ?? 'ts';
     const preScripts: string[] = req.body.preScripts ?? [];
-
+    const variables = req.body.variables ?? { };
+    const envVariables = req.body.envVariables ?? { };
     const script =
       '// @ts-ignore\n' +
       `
 import Sys from '../app/sys';
-const sys = new Sys();
+const sys = new Sys(${JSON.stringify(variables)}, ${JSON.stringify(envVariables)});
       `.trim() + '\n' +
       preScripts.join('\n') + '\n' +
       (req.body.script ?? '');
