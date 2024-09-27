@@ -30,6 +30,7 @@ import Sys from '../app/sys';
 const sys = new Sys(${JSON.stringify(variables)}, ${JSON.stringify(envVariables)});
       `.trim() + '\n' +
       preScripts.join('\n') + '\n' +
+      `try { Object.entries(window ?? { }).forEach(([key, value]) => global[key] = value); } catch (error) { }` + '\n' +
       (req.body.script ?? '') + '\n' +
       `
 test.afterAll(() => {
@@ -97,6 +98,8 @@ test.afterAll(() => {
       preScripts: [`
         const moment = require('moment');
         console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+        let window = { };
+        window.perfma = 'benma';
       `],
       timeout: 5000,
     });
