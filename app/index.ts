@@ -14,6 +14,23 @@ process.on('unhandledRejection', () => { });
 
 const PORT = 6429;
 
+async function allInOneHtml(reportHtmlFileDir: string) {
+  const reportHtmlFileName = path.join(reportHtmlFileDir, 'index.html');
+  let htmlText = await fs.readFile(reportHtmlFileName, 'utf8');
+  htmlText = htmlText.replaceAll('m.jsx(', 'jsxp(m,');
+  htmlText = htmlText.replace('<script type="module">', `
+<script type="module">
+const jsxp = (m, ...args) => {
+  const attrs = args[1] ?? { };
+  const fileName = attrs.src?.replace('data/', '');
+  if (fileName && window[fileName]) attrs.src = window[fileName];
+  return m.jsx(...args);
+};
+`.trim());
+  fs.writeFile(reportHtmlFileName, htmlText, 'utf8');
+  return htmlText;
+}
+
 function main() {
   const app = express();
   app.use(compression());
@@ -71,7 +88,7 @@ test.afterAll(() => {
       clearTimeout(timer);
       info = { ...info, endTime: now(), error, stdout, stderr, success: !error };
       try {
-        info = { ...info, object: await fs.readFile(reportHtmlFileName, 'utf8'), states: require(path.join('..', statesFileName)) };
+        info = { ...info, object: await allInOneHtml(reportHtmlFileDir), states: require(path.join('..', statesFileName)) };
       } catch (error) {
         info = { ...info, error, success: false };
       }
