@@ -27,7 +27,25 @@ const jsxp = (m, ...args) => {
   return m.jsx(...args);
 };
 `.trim());
-  fs.writeFile(reportHtmlFileName, htmlText, 'utf8');
+  const reportHtmlAssetsDir = path.join(reportHtmlFileDir, 'data');
+  let files: string[] = [];
+  try {
+    files = await fs.readdir(reportHtmlAssetsDir);
+  } catch (error) { }
+  const buffers = await Promise.all(files.map((file) => fs.readFile(path.join(reportHtmlAssetsDir, file))));
+  const dataUrls = buffers.map((buffer, index) => {
+    const file = files[index].toLowerCase();
+    let base64 = buffer.toString('base64');
+    if (file.endsWith('.png')) base64 = `data:image/png;base64,${base64}`;
+    else if (file.endsWith('.webm')) base64 = `data:video/webm;base64,${base64}`;
+    else base64 = `data:application/octet-stream;base64,${base64}`;
+    return base64;
+  });
+  const varSetCode = dataUrls.map((dataUrls, index) => {
+    const file = files[index];
+    return `window['${file}'] = '${dataUrls}';`;
+  }).join('\n');
+  htmlText = htmlText.replace('<script type="module">', `<script type="module">${varSetCode}`);
   return htmlText;
 }
 
@@ -97,7 +115,7 @@ test.afterAll(() => {
       fs.unlink(scriptFileName);
       fs.unlink(configFileName);
       fs.unlink(statesFileName);
-      // fs.unlink(reportHtmlFileName).then(() => fs.rmdir(reportHtmlFileDir));
+      fs.unlink(reportHtmlFileName).then(() => fs.rmdir(reportHtmlFileDir));
     });
     if (timeout) timer = setTimeout(() => {
       const message = `timeout ${timeout}ms`;
