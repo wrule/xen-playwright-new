@@ -29,7 +29,19 @@ import Sys from '../app/sys';
 const sys = new Sys(${JSON.stringify(variables)}, ${JSON.stringify(envVariables)});
       `.trim() + '\n' +
       preScripts.join('\n') + '\n' +
-      (req.body.script ?? '');
+      (req.body.script ?? '') + '\n' +
+      `
+test.afterAll(() => {
+  const fs = require('fs');
+  const fileName = __filename
+    .replaceAll(__dirname, '')
+    .replaceAll('.spec.ts', '')
+    .replaceAll('/', '')
+    .replaceAll('\\\\', '')
+    .replaceAll('.', '');
+  fs.writeFileSync('scripts/' + fileName + '.states.json', JSON.stringify(sys.states()), 'utf8');
+});
+      `.trim() + '\n';
 
     let config = req.body.config ?? '';
     const timeout = req.body.timeout;
