@@ -68,16 +68,16 @@ const sys = new Sys(${JSON.stringify(variables)}, ${JSON.stringify(envVariables)
       `try { Object.entries(window ?? { }).forEach(([key, value]) => global[key] = value); } catch (error) { }` + '\n' +
       (req.body.script ?? '') + '\n' +
       `
-test.afterAll(() => {
-  const fs = require('fs');
-  const fileName = __filename
-    .replaceAll(__dirname, '')
-    .replaceAll('.spec.ts', '')
-    .replaceAll('/', '')
-    .replaceAll('\\\\', '')
-    .replaceAll('.', '');
-  fs.writeFileSync('scripts/' + fileName + '.states.json', JSON.stringify(sys.states()), 'utf8');
-});
+// test.afterAll(() => {
+//   const fs = require('fs');
+//   const fileName = __filename
+//     .replaceAll(__dirname, '')
+//     .replaceAll('.spec.ts', '')
+//     .replaceAll('/', '')
+//     .replaceAll('\\\\', '')
+//     .replaceAll('.', '');
+//   fs.writeFileSync('scripts/' + fileName + '.states.json', JSON.stringify(sys.states()), 'utf8');
+// });
       `.trim() + '\n';
 
     let config = req.body.config ?? '';
@@ -105,8 +105,12 @@ test.afterAll(() => {
     const child = exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
       clearTimeout(timer);
       info = { ...info, endTime: now(), error, stdout, stderr, success: !error };
+      let states = { };
       try {
-        info = { ...info, object: await allInOneHtml(reportHtmlFileDir), states: require(path.join('..', statesFileName)) };
+        states = require(path.join('..', statesFileName));
+      } catch (error) { }
+      try {
+        info = { ...info, object: await allInOneHtml(reportHtmlFileDir), states };
       } catch (error) {
         info = { ...info, error, success: false };
       }
