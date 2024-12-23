@@ -102,7 +102,7 @@ const sys = new Sys(${JSON.stringify(variables)}, ${JSON.stringify(envVariables)
     const now = () => dayjs().format('YYYY-MM-DD HH:mm:ss');
     let info: any = { uuid, startTime: now() };
     let timer: any = null;
-    const child = exec(`npx playwright test ${scriptFileName} --config ${configFileName}`, async (error, stdout, stderr) => {
+    const child = exec(`npx tsx ${scriptFileName}`, async (error, stdout, stderr) => {
       clearTimeout(timer);
       info = { ...info, endTime: now(), error, stdout, stderr, success: !error };
       let states = { };
@@ -110,7 +110,7 @@ const sys = new Sys(${JSON.stringify(variables)}, ${JSON.stringify(envVariables)
         states = require(path.join('..', statesFileName));
       } catch (error) { }
       try {
-        info = { ...info, object: await allInOneHtml(reportHtmlFileDir), states };
+        // info = { ...info, object: await allInOneHtml(reportHtmlFileDir), states };
       } catch (error) {
         info = { ...info, error, success: false };
       }
